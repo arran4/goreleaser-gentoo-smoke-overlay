@@ -1,0 +1,79 @@
+name: Test Ebuild
+
+on:
+  push:
+    paths:
+      - '**/*.ebuild'
+  pull_request:
+    paths:
+      - '**/*.ebuild'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test ebuild in Gentoo container
+        run: |
+          docker run -i --rm -v ${{ github.workspace }}:/overlay gentoo/stage3 /bin/bash << 'EOF'
+            set -ex
+
+            # Sync portage tree
+            emerge-webrsync
+
+            # Configure overlay
+            mkdir -p /etc/portage/repos.conf
+            cat <<'REPO' > /etc/portage/repos.conf/overlay.conf
+          [goreleaser-gentoo-smoke-overlay]
+          location = /overlay
+          masters = gentoo
+          auto-sync = no
+          REPO
+
+            # Accept ~amd64 keyword for testing
+            mkdir -p /etc/portage/package.accept_keywords
+            echo '*/* ~amd64' > /etc/portage/package.accept_keywords/overlay
+
+            # Find the ebuild
+            cd /overlay
+            EBUILD=$(find . -name '*.ebuild' | head -n 1)
+            if [ -z "$EBUILD" ]; then
+              echo 'No ebuild found in the repository.'
+              exit 0
+            fi
+
+            PKG_CAT=$(basename $(dirname $(dirname $EBUILD)))
+            PKG_NAME=$(basename $(dirname $EBUILD))
+            PKG="$PKG_CAT/$PKG_NAME"
+
+            echo "Installing $PKG..."
+            emerge -v "$PKG"
+
+            # Find the installed binary
+            BIN=$(awk '/^obj (\/usr\/bin\/|\/bin\/|\/usr\/sbin\/|\/sbin\/)/ {print $2; exit}' /var/db/pkg/$PKG-*/CONTENTS)
+
+            if [ -z "$BIN" ]; then
+              echo 'Could not find an executable in /usr/bin/, /bin/, /usr/sbin/, or /sbin/ from package CONTENTS.'
+              cat /var/db/pkg/$PKG-*/CONTENTS
+              exit 1
+            fi
+
+            echo "Testing execution of $BIN..."
+            # Check dynamic dependencies
+            ldd $BIN || true
+
+            # Run with --help, capture exit code. Ignore exit code 1 or 2 as some programs might exit non-zero for --help,
+            # but fail if it's 126 (command invoked cannot execute) or 127 (command not found / missing library)
+            set +e
+            $BIN --help
+            RET=$?
+            set -e
+            if [ $RET -eq 126 ] || [ $RET -eq 127 ] || [ $RET -eq 139 ]; then
+              echo "Execution failed with critical error code $RET."
+              exit 1
+            fi
+            echo "Execution verified."
+          EOF
