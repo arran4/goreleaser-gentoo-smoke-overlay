@@ -1,9 +1,6 @@
 name: Test Ebuild
 
 on:
-  push:
-    paths:
-      - '**/*.ebuild'
   pull_request:
     paths:
       - '**/*.ebuild'
@@ -39,7 +36,7 @@ jobs:
 
             # Find the ebuild
             cd /overlay
-            EBUILD=$(find . -name '*.ebuild' | head -n 1)
+            EBUILD=$(find . -name '*.ebuild' | sort -V | tail -n 1)
             if [ -z "$EBUILD" ]; then
               echo 'No ebuild found in the repository.'
               exit 0
