@@ -6,3 +6,9 @@ This repository is intentionally almost empty. Generated ebuilds are written
 here by the source repo release workflow.
 
 Do not add ebuilds manually.
+
+To add this repository to your system, run:
+
+```shell
+eselect repository add goreleaser-gentoo-smoke-overlay git https://github.com/arran4/goreleaser-gentoo-smoke-overlay.git
+```
