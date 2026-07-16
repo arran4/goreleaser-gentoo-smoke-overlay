@@ -15,44 +15,22 @@ eselect repository add goreleaser-gentoo-smoke-overlay git https://github.com/ar
 
 ## Example Testing in Docker
 
-```
-arran@arran-desktop:~ 59606
-$ docker run -ti --rm gentoo/stage3
-Unable to
-find image 'gentoo/stage3:latest' locally
-latest: Pulling from gentoo/stage3
+```shell
+# Start the Gentoo container
+docker run -ti --rm gentoo/stage3
 
-1a22a095243b: Pull complete
-Digest:
-sha256:9d03b48eda632da09f469d384ce77ec05618060ed4e9ac295f8192a196e7539a
+# Inside the container, sync the portage tree
+emerge-webrsync
 
-Status: Downloaded newer image for gentoo/stage3:latest
-b88592f96474 / # em
+# Install eselect-repository
+emerge --oneshot app-eselect/eselect-repository
 
-emaint           emerge           emerge-webrsync  emirrordist
+# Add the overlay
+eselect repository add goreleaser-gentoo-smoke-overlay git https://github.com/arran4/goreleaser-gentoo-smoke-overlay.git
 
-b88592f96474 / # eselect repository add goreleaser-gentoo-smoke-overlay git
-https://github.com/arran4/goreleaser-gentoo-smoke-overlay.git
-!!! Error: Can't
-load module repository
-b88592f96474 / # emerge-webrsync
-emerge
---oneshot app-eselect/eselect-repository
+# Sync the overlay
+emaint sync -r goreleaser-gentoo-smoke-overlay
 
-eselect repository add
-goreleaser-gentoo-smoke-overlay \
-   git
-https://github.com/arran4/goreleaser-gentoo-smoke-overlay.git
-
-emaint sync -r
-goreleaser-gentoo-smoke-overlay
-
-```
-
-and
-
-```
-b88592f96474 / #  emerge -va app-misc/goreleaser-gentoo-smoke-bin --autounmask
---autounmask-continue --autounmask-write
-
+# Install the package
+emerge -va app-misc/goreleaser-gentoo-smoke-bin --autounmask --autounmask-continue --autounmask-write
 ```
