@@ -23,7 +23,7 @@ docker run -ti --rm gentoo/stage3
 emerge-webrsync
 
 # Install eselect-repository
-emerge --oneshot app-eselect/eselect-repository
+emerge --oneshot app-eselect/eselect-repository vim
 
 # Add the overlay
 eselect repository add goreleaser-gentoo-smoke-overlay git https://github.com/arran4/goreleaser-gentoo-smoke-overlay.git
