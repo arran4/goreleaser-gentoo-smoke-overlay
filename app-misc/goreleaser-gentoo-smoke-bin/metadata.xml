@@ -5,6 +5,7 @@
 		<flag name="doc">Install README man page and other docs</flag>
 		<flag name="doc">Install README man page and other docs</flag>
 		<flag name="doc">Install README man page and other docs</flag>
+		<flag name="doc">Install README man page and other docs</flag>
 	</use>
 	<upstream>
 		<doc>https://github.com/arran4/goreleaser-gentoo-smoke</doc>
