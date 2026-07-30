@@ -3,9 +3,6 @@
 <pkgmetadata>
 	<use>
 		<flag name="doc">Install README man page and other docs</flag>
-		<flag name="doc">Install README man page and other docs</flag>
-		<flag name="doc">Install README man page and other docs</flag>
-		<flag name="doc">Install README man page and other docs</flag>
 		<flag name="systemd">enables systemd installation</flag>
 	</use>
 	<upstream>
