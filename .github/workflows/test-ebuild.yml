@@ -9,9 +9,26 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Download g2 and run deduplicate
+        run: |
+          wget https://github.com/arran4/g2/releases/download/v0.0.87/g2_0.0.87_linux_amd64.tar.gz
+          tar -xvf g2_0.0.87_linux_amd64.tar.gz
+          ./g2 ebuild deduplicate
+          rm -f g2_0.0.87_linux_amd64.tar.gz g2 doc/g2.1
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: deduplicate ebuilds"
+          file_pattern: 'app-misc/**/*.ebuild'
 
       - name: Test ebuild in Gentoo container
         run: |
