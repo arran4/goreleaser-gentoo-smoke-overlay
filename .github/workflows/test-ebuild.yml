@@ -50,10 +50,10 @@ jobs:
             emerge -v "$PKG"
 
             # Find the installed binary
-            BIN=$(awk '/^obj (\/usr\/bin\/|\/bin\/|\/usr\/sbin\/|\/sbin\/)/ {print $2; exit}' /var/db/pkg/$PKG-*/CONTENTS)
+            BIN=$(awk '/^obj (\/usr\/bin\/|\/bin\/|\/usr\/sbin\/|\/sbin\/|\/opt\/bin\/)/ {print $2; exit}' /var/db/pkg/$PKG-*/CONTENTS)
 
             if [ -z "$BIN" ]; then
-              echo 'Could not find an executable in /usr/bin/, /bin/, /usr/sbin/, or /sbin/ from package CONTENTS.'
+              echo 'Could not find an executable in /usr/bin/, /bin/, /usr/sbin/, /sbin/, or /opt/bin/ from package CONTENTS.'
               cat /var/db/pkg/$PKG-*/CONTENTS
               exit 1
             fi
