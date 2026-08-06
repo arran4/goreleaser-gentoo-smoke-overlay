@@ -1,0 +1,12 @@
+DEFINED_PHASES=src_install src_unpack
+DESCRIPTION=Disposable GoReleaser Gentoo ebuild smoke test
+EAPI=8
+HOMEPAGE=https://github.com/arran4/goreleaser-gentoo-smoke
+INHERITED=
+IUSE=doc systemd
+KEYWORDS=~amd64 ~arm64
+LICENSE=MIT
+RESTRICT=
+SLOT=0
+SRC_URI=arm64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.51/goreleaser-gentoo-smoke_0.0.51_linux_arm64.tar.gz ) amd64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.51/goreleaser-gentoo-smoke_0.0.51_linux_amd64.tar.gz )
+_md5_=5937e18f021f5f9c752f12b44433416b
