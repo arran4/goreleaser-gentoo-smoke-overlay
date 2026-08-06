@@ -5,8 +5,8 @@ inherit systemd
 DESCRIPTION="Disposable GoReleaser Gentoo ebuild smoke test"
 HOMEPAGE="https://github.com/arran4/goreleaser-gentoo-smoke"
 SRC_URI="
-  arm64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.28/goreleaser-gentoo-smoke_0.0.28_linux_arm64.tar.gz -> goreleaser-gentoo-smoke_0.0.28_linux_arm64.tar.gz )
-  amd64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.28/goreleaser-gentoo-smoke_0.0.28_linux_amd64.tar.gz -> goreleaser-gentoo-smoke_0.0.28_linux_amd64.tar.gz )
+  arm64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.50/goreleaser-gentoo-smoke_0.0.50_linux_arm64.tar.gz -> goreleaser-gentoo-smoke_0.0.50_linux_arm64.tar.gz )
+  amd64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.50/goreleaser-gentoo-smoke_0.0.50_linux_amd64.tar.gz -> goreleaser-gentoo-smoke_0.0.50_linux_amd64.tar.gz )
 "
 
 LICENSE="MIT"
@@ -17,6 +17,7 @@ IUSE="doc systemd"
 S="${WORKDIR}"
 
 src_install() {
+  exeinto /opt/bin
   doexe "goreleaser-gentoo-smoke" || die "Failed to install binary"
   if ! use systemd; then
   newinitd "${FILESDIR}/initd-script.sh" "goreleaser-gentoo-smoke"
