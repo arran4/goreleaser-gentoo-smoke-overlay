@@ -5,8 +5,8 @@ inherit systemd
 DESCRIPTION="Disposable GoReleaser Gentoo ebuild smoke test"
 HOMEPAGE="https://github.com/arran4/goreleaser-gentoo-smoke"
 SRC_URI="
-  arm64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.28/goreleaser-gentoo-smoke_0.0.28_linux_arm64.tar.gz -> goreleaser-gentoo-smoke_0.0.28_linux_arm64.tar.gz )
-  amd64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.28/goreleaser-gentoo-smoke_0.0.28_linux_amd64.tar.gz -> goreleaser-gentoo-smoke_0.0.28_linux_amd64.tar.gz )
+  arm64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.47/goreleaser-gentoo-smoke_0.0.47_linux_arm64.tar.gz -> goreleaser-gentoo-smoke_0.0.47_linux_arm64.tar.gz )
+  amd64? ( https://github.com/arran4/goreleaser-gentoo-smoke/releases/download/v0.0.47/goreleaser-gentoo-smoke_0.0.47_linux_amd64.tar.gz -> goreleaser-gentoo-smoke_0.0.47_linux_amd64.tar.gz )
 "
 
 LICENSE="MIT"
@@ -17,17 +17,18 @@ IUSE="doc systemd"
 S="${WORKDIR}"
 
 src_install() {
+  exeinto /opt/bin
   doexe "goreleaser-gentoo-smoke" || die "Failed to install binary"
   if ! use systemd; then
   newinitd "${FILESDIR}/initd-script.sh" "goreleaser-gentoo-smoke"
   fi
   insinto "/etc/goreleaser-gentoo-smoke"
-  newins "${FILESDIR}/config.yaml" "goreleaser-gentoo-smoke.conf"
+  newins "config.yaml" "goreleaser-gentoo-smoke.conf"
   dosym "/usr/bin/goreleaser-gentoo-smoke" "/usr/bin/ggs"
   if use systemd; then
   systemd_dounit "${FILESDIR}/systemd-service.service"
   fi
-  doman "${FILESDIR}/goreleaser-gentoo-smoke.1"
+  doman "goreleaser-gentoo-smoke.1"
   if use doc; then
     dodoc README* || die
   fi
